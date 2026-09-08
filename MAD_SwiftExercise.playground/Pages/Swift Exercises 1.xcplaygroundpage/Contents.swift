@@ -26,14 +26,56 @@ print("Hello, World!") // This works because Swift programs by default execute s
 //: 1. Declare a variable with value `42.5`. What type does it have?
 //: 1. Declare a variable with explicit type `Float` and value `42.5`.
 //: 1. Declare an uninitialized constant with type `String`. Will you ever be able to assign a value to this constant?
+// 1.1
+var myNumber = 42
 
+// 1.2
+let myConstant = 42
+
+//1.3
+var myCommaNumber = 42.5
+print(type(of: myCommaNumber)) // Type: Double
+
+//1.4
+var myFloat: Float = 42.5
+
+//1.5
+let myUninitializedConstant: String
+// --- EXTRA TASKS / TRIES ---
+//myUninitializedConstant = "Hello, World!" // i can assign a value once
+//myUninitializedConstant = "Hello again!" // this won't work
+// Answer: YES, i'll be able to assign a value once
 //: ### Strings and String interpolation
 //: 1. Create a constant of type `String` containing the text `"This is a String."`.
 //: 1. Create a mutable String with `"This is an Int: "` as its initial value.
 //: 1. Create an `Int` constant with value 42 and append it to the mutable string, resulting in the value: `"This is an Int: 42"`.
 //: 1. Create another constant containing the same string, but this time use a string literal and string interpolation (the `\()` syntax) to create it.
 //: 1. Create a multiline string using the multiline string literal.
+// 2.1
+let myString: String = "This is a String."
+// let myString = "This is a String." // implicit assignment
 
+// 2.2
+var myMutableString = "This is an Int: "
+
+// 2.3
+let myIntConstant = 42
+myMutableString.append(String(myIntConstant))
+// --- EXTRA TASKS / TRIES ---
+// myMutableString = myMutableString + String(myIntConstant)
+// myMutableString += String(myIntConstant)
+
+// 2.4
+let myConstantString = "This is an Int: \(myIntConstant)"
+
+
+// 2.5
+var multilineString = """
+    This is my example
+    with a second line
+    and a third line
+    """
+// \ are not needed for a line break - \ are used as a soft line break!
 //: ### Arrays and Dictionaries
 //: Arrays
 //: 1. Create an immutable array and initialize it with an array literal containing 3 `String` elements
@@ -42,10 +84,62 @@ print("Hello, World!") // This works because Swift programs by default execute s
 //: 1. Can you modify one of the `String` elements in the first array (for example, append a word to it)? Why/why not? What if the elements were not of type `String`, but instead of a class?
 //: 1. What happens if you modify the `String` element in the second array (for example, if you append a word to it)? Will the second element in the first array also change, or stay the same? Explain why.
 //: 1. Create an immutable empty array of type `[Int]` without any literals, using the name of the class (`Array`) and the standard initializer for generic types (`var value = ClassName<GenericType>()`)
+// 3.1
+let immutableArray = ["String 1", "String 2", "String 3"]
+// immutableArray.append("String 4") //does not work -> array is immutable
 
+// 3.2
+var mutableArray : [String] = [] // new sytax - ols syntax was : String[] - Source: https://stackoverflow.com/a/24213101
+
+// 3.3
+mutableArray.append(immutableArray[1])
+
+// 3.4
+// append is not possible (line 73)
+/*
+// also not possible: immutableArray[1] = "New string!"
+
+class Student {
+    var firstName = ""
+    var lastName = ""
+    
+    init(firstName: String = "", lastName: String = "") {
+        self.firstName = firstName
+        self.lastName = lastName
+    }
+}
+
+let studentMax = Student(firstName: "Max", lastName: "Mustermann")
+let studentErika = Student(firstName: "Erika", lastName: "Musterfrau")
+
+let immutableStudentArray = [studentMax]
+//immutableStudentArray[0] = studentErika //also not possible
+
+// I can only edit the objects themselves
+immutableStudentArray[0].firstName.append("imilian")
+print(immutableStudentArray[0].firstName)
+*/
+// 4) Antwort: Dies funktioniert, da im Array nur eine Referenz zur Instanz gespeichert ist und ich diese ändern kann. Änderungen am Array selbst sind nicht möglich.
+
+// 3.5
+mutableArray[0].append(" Test change")
+print(mutableArray[0])
+print(immutableArray[1])
+// Antwort: Strings werden in Swift wie "primitive Datentypen" - um in der C#-Bezeichnung zu bleiben - behandelt. Sprich sie werden bei einer Zuweisung zu einer anderen Varibale kopiert
+// Eine Änderung hat daher keine Auswirkung auf den ursprünglichen Wert (wie z.B. bei INT in C# / Java) - Strings werden in diesen Programmiersprachen ja als Objekte im Gegensatz zu Swift implementiert
+
+// 3.6
+let immutableEmptyIntArray = Array<Int>()
 //: Dictionaries
 //: 1. Create a mutable empty Dictionary of type `[String: Double]`
 //: 1. Set the value for the key `"Answer to Life, the Universe and Everything"` to `42`.
+// 4.1
+var dict: [String: Double] = [:] // https://developer.apple.com/documentation/swift/dictionary
+
+// 4.2
+// print(dict["Answer to Life, the Universe and Everything"] ?? "nicht vorhanden")
+dict["Answer to Life, the Universe and Everything"] = 42
+// print(dict["Answer to Life, the Universe and Everything"] ?? "nicht vorhanden")
 
 //: ### Optionals
 //: 1. Create an optional `String` variable and assign a non-nil value of your choice
