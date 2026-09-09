@@ -147,7 +147,30 @@ dict["Answer to Life, the Universe and Everything"] = 42
 //: 1. What happens if you force-unwrap an optional variable that contains `nil`?
 //: 1. Create another optional `String` variable and asign the value `nil`. Use the nil coalescing operator (`??`) to print the first unwrapped String from above.
 //: 1. Do the same thing again, but this time use the ternary conditional operator `(a ? b : c)`.
+// 5.1
+var stringOptional: String? = "Hello Optional!"
 
+// 5.2
+// Force unwrap - unsafe!
+print(stringOptional!)
+// If let
+if let stringOptional {
+    print(stringOptional)
+}
+// ?? (like Elvis Operator ?: in Kotlin)
+print(stringOptional ?? "Optional not set!")
+
+// 5.3
+// stringOptional = nil
+// print(stringOptional!)
+// Answer: The program crashes (unsafe)
+
+// 5.4
+var stringOptional2 : String? = nil
+print(stringOptional2 ?? stringOptional ?? "Both optionals are not set!") //Added fallback sting - ozherwise XCode would warn me about an unsafe operation
+
+// 5.5
+print(stringOptional2 != nil ? stringOptional2! : stringOptional!) //unsafe if both are nil
 //: Optional chaining
 //: 1. Consider the following `struct`. Use optional chaining to change the value of `anOptionalInt` in `instance` to a new value of your choice in a single line of code. What would happen if we executed that line while `instance` is `nil`?
 //: 1. Use the `if let` conditional and optional chaining to print the value of `anOptionalInt` in `instance`. What would happen if `instance` or `anOptionalInt` were `nil`?
@@ -157,17 +180,70 @@ struct MyStruct {
     var anOptionalInt: Int? = 5
     
     func sayHelloWorld() {
-        print("Hello, World!")
+        print("Hello, World! Optional func.")
     }
 }
 
 var instance: MyStruct? = MyStruct()
 
+// 5.1
+instance?.anOptionalInt = 6
+
+var nilInstance: MyStruct? = nil
+nilInstance?.anOptionalInt = 8
+// Antwort: Ausführung wird wegen "?" abgebrochen, da Instanz nicht initialisiert
+// Der Wert wird dadurch nicht gesetzt.
+// Wenn ich force verwenden würde "!", würde das Programm abstürzen
+
+// 5.2
+if let value = instance?.anOptionalInt {
+    print(value)
+}
+// Test with nil instance - nothing happens
+if let value = nilInstance?.anOptionalInt {
+    print(value)
+} /*else {
+    print("Something in the chain is nil")
+}*/
+// Test with int is nil - nothing happens
+instance?.anOptionalInt = nil
+if let value = nilInstance?.anOptionalInt {
+    print(value)
+} /*else {
+    print("Something in the chain is nil")
+}*/
+
+// 5.3
+instance?.sayHelloWorld()
+nilInstance?.sayHelloWorld()
+// Antwort: Wird ausgeführt, wenn Instanz initialisiert ist
+// Ansonsten wird nichts gemacht (siehe 5.1)
 //: ### Control flow
 //: 1. Write a `for-in` loop that sums up all the values in `myNumbers`.
 //: 1. Create an empty mutable `[Int: Int]` dictionary. Use a `for-in` loop to iterate over the elements in `myNumbers` and add each value to the dictionary, using the index of each element in `myNumbers` as its key. So for example, the dictionary should contain the key/value pair `0:12`, because 12 is element 0 of `myNumbers`.
 
 let myNumbers = [12, 23, 1, 104]
+
+//6.1
+var result = 0
+
+for i in myNumbers {
+    result += i
+}
+print("Result: \(result)")
+
+// 6.2
+var mutableDict: [Int:Int] = [:]
+
+for (index, value) in myNumbers.enumerated() {
+    mutableDict[index] = value
+}
+
+// alternative
+var mutableDict2: [Int:Int] = [:]
+for index in 0..<myNumbers.count {
+    mutableDict2[index] = myNumbers[index]
+}
 
 //: ### Functions and Closures
 //: Functions
