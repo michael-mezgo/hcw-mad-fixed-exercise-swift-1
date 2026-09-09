@@ -253,7 +253,51 @@ for index in 0..<myNumbers.count {
 //: 1. Declare and call a function with the same signature (two strings as parameters and returns a string), but this time make the first argument label **different** from the parameter name (=use a custom argument label).
 //: 1. Declare a function with a default parameter value. Call the function twice, once with the argument present, once without.
 //: 1. Declare a function with name `callAFunction` that takes another function as parameter and then executes it. Call your newly declared `callAFunction` and pass in one of the functions you previously declared.
+// 7.1
+func printHelloWorld() {
+    print("Hello World Function!")
+}
+printHelloWorld()
 
+// 7.2
+func unionStrings(string1: String, string2: String) -> String {
+    return "\(string1) \(string2)"
+}
+print(unionStrings(string1: "Hello", string2: "World!"))
+
+/*
+// without labels
+func unionStringsWithOptionalLabels(_ string1: String, _ string2: String) -> String {
+    return "\(string1) \(string2)"
+}
+print(unionStringsWithOptionalLabels("Hello", "World"))
+ */
+
+// 7.3
+func unionStrings(_ string1: String, string2: String) -> String {
+    return "\(string1) \(string2)"
+}
+print(unionStrings("Hello", string2: "World"))
+
+// 7.4
+func unionStrings(first string1: String, string2: String) -> String {
+    return "\(string1) \(string2)"
+}
+print(unionStrings(first: "Hello", string2: "World"))
+
+// 7.5
+func greetDefault(myGreeting: String = "Seavas") {
+    print(myGreeting)
+}
+greetDefault()
+greetDefault(myGreeting: "Hallo")
+
+// 7.6
+func callAFunction(operation:(String, String) -> String) {
+    let result = operation("Hello", "HCW!")
+    print(result)
+}
+callAFunction(operation: unionStrings(string1:string2:))
 //: Closures
 //: 1. Create an optional variable that holds a closure (with a `String` parameter and no return type) and assign `nil`.
 //: 1. Call the closure using optional chaining. What will happen?
