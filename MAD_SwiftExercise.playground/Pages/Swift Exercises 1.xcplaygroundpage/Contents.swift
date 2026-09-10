@@ -302,7 +302,16 @@ callAFunction(operation: unionStrings(string1:string2:))
 //: 1. Create an optional variable that holds a closure (with a `String` parameter and no return type) and assign `nil`.
 //: 1. Call the closure using optional chaining. What will happen?
 //: 1. Create a `typealias` for this type of closure.
+// Anonymous Function / Lambda
+// 8.1
+var myClosure: ((String) -> Void)? = nil
 
+// 8.2
+myClosure?("Hello World")
+// Answer: Nothing happens
+
+// 8.3
+typealias StringHandler = (String) -> Void
 //: 1. Take a look at the following function, which takes a closure as parameter and calls it. This function is then called. For each of the following exercises, call the function again, but each time use one more simplification:
 //:   * Omit closure parameter types.
 //:   * Omit the closure return type
@@ -317,7 +326,28 @@ callAClosure(closure: { (item1: String, item2: String) -> String in
     return "\(item1) \(item2)"
 })
 
+// Omit parameter types
+callAClosure(closure: {(item1, item2) -> String in
+    return "\(item1) \(item2)"
+})
 
+// Omit return type
+callAClosure(closure: {(item1, item2) in
+    return "\(item1) \(item2)"
+})
+
+// Omit round brackets and argument label
+callAClosure {(item1, item2) in
+    return "\(item1) \(item2)"
+}
+
+// Omit closure parameters
+callAClosure {
+    return "\($0) \($1)"
+}
+
+// Omit return
+callAClosure { "\($0) \($1)" }
 //: ### Classes
 //: 1. Create a new class named `Person`. Add non-optional `firstName` and `lastName` properties and an initializer.
 //: 1. Add a `name` computed property that returns a `String` containing the first and last name.
@@ -325,6 +355,55 @@ callAClosure(closure: { (item1: String, item2: String) -> String in
 //: 1. Create a subclass of `Person` and name it `Student`.
 //: 1. Add a `Float?` optional property called `grade`. Use the `didSet` property observer to make sure that the grade is not lower than 1.0 and not higher than 5.0 after it was set. Clamp the new value to this interval - so if a value higher than 5.0 is set, set it to 5.0 afterwards. If a value lower than 1.0 is set, set it to 1.0 afterwards.
 //: 1. Override the `greet` function from the superclass. If the `grade` property is set, it should now return `"Hi, I'm \(name). My grade is: \(grade)"`. If the `grade property isn't set, return the superclass's implementation.
+// 9.1
+class Person {
+    var firstName = ""
+    var lastName = ""
+    
+    init(firstName: String = "", lastName: String = "") {
+        self.firstName = firstName
+        self.lastName = lastName
+    }
+    
+    // 9.2
+    var name: String {
+        "\(firstName) \(lastName)"
+    }
+    
+    // 9.3
+    func greet() -> String {
+        return "Hi, I'm \(name)"
+    }
+}
+
+// 9.4
+class Student: Person {
+    var grade: Float? {
+        didSet { // 9.5 https://docs.swift.org/swift-book/documentation/the-swift-programming-language/properties/
+            if let currentGrade = grade {
+                if (currentGrade < 1.0) {
+                    grade = 1.0
+                } else if (currentGrade > 5.0) {
+                    grade = 5.0
+                }
+            }
+            
+            // Shorter - Help from AI
+            /* if let current = grade {
+                grade = min(max(current, 1.0), 5.0)
+            }*/
+        }
+    }
+    
+    // 9.6
+    override func greet() -> String {
+        if let grade {
+            return "Hi, I'm \(name). My grade is: \(grade)"
+        } else {
+            return super.greet()
+        }
+    }
+}
 
 //: ### Enums and Structs
 //: 1. Create an enum named `PetType` with cases `dog` and `cat`
@@ -337,7 +416,67 @@ callAClosure(closure: { (item1: String, item2: String) -> String in
 //: 1. Create 3 or more instances of your `Student` class from above and store them in `let` constants. Then create a new array that contains all your students and store it in a variable.
 //: 1. Change one of the names of the students in your array. Does this change the name of any of the students stored in the `let` constants? Explain why/why not.
 //: 1. Can you change the name of one of the students stored in the `let` constants? Explain why/why not.
+// 10.1
+enum PetType { // small letters https://docs.swift.org/swift-book/documentation/the-swift-programming-language/enumerations/
+    case dog
+    case cat
+    
+    // 10.2
+    var animalSound: String {
+        switch self {
+        case .dog: "woof"
+        case .cat: "meow"
+        }
+    }
+}
 
+// 10.3
+// https://docs.swift.org/swift-book/documentation/the-swift-programming-language/classesandstructures
+struct Pet {
+    var name: String
+    let type: PetType
+    
+    // 10.4
+    func makeNoise() -> String {
+        return type.animalSound
+    }
+}
+
+// 10.5
+let bello = Pet(name: "Bello", type: .dog)
+let mimi = Pet(name: "Mimi", type: .cat)
+let bruno = Pet(name: "Bruno", type: .dog)
+
+var myPets = [bello, mimi, bruno]
+
+// 10.6
+myPets[0].name = "Bella"
+print("Bello in Array: \(myPets[0].name)")
+print("Bello in Variable: \(bello.name)")
+// Antwort: Es hat keine Auswirkungen auf die einzelne Variable.
+// Grund: Structures sind Wert-Typen. Daher wird eine neue Kopie erstellt und nicht nur die Referenz (wie bei einer Klasse) kopiert. Quelle: https://developer.apple.com/documentation/swift/choosing-between-structures-and-classes#:~:text=Because%20structures%20are%20value%20types—unlike%20classes—local%20changes%20to%20a%20structure%20aren’t%20visible%20to%20the%20rest%20of%20your%20app%20unless%20you%20intentionally%20communicate%20those%20changes%20as%20part%20of%20the%20flow%20of%20your%20app.
+
+// 10.7
+// bello.name = "Bella"
+// Antwort: Das funktioniert nicht, da es sich um einen Wert-Typem bei einem Struct handelt ist eine Änderung bei einer Konstante (let) nicht möglich
+
+// 10.8
+let michael = Student(firstName: "Michael", lastName: "M")
+let armin = Student(firstName: "Armin", lastName: "A")
+let ebu = Student(firstName: "Ebu", lastName: "C")
+
+var students = [michael, armin, ebu]
+
+// 10.9
+students.first?.firstName = "Mike"
+print("Michael in Variable: \(michael.firstName)")
+print("Michael in Array: \(students.first?.firstName ?? "No student")")
+// Antwort: Hier hatte die Änderung eine Auswirkung sowohl auf das Array, als auch auf die Variable. Grund dafür ist, dass jeweils nur die Referenz auf das Objekt gespeichert ist und die Änderung direkt im Objekt erfolgt (daher ist eine Änderung trotz let auch möglich) - Quelle siehe 10.6
+
+// 10.10
+michael.firstName = "Michi"
+print("Michael after change of let: \(michael.firstName)")
+// Antwort: Ja, das geht. Erklärung steht bereits bei 10.9 und 10.6
 //: ### Protocols and extensions
 //: 1. Create a protocol called `NamedThing`. Add a `get` variable of type `String`, with the name `name`.
 //: 1. Use extensions to make your `Person` class and `Pet` structs from above conform to the new protocol.
