@@ -484,3 +484,31 @@ print("Michael after change of let: \(michael.firstName)")
 //: 1. Iterate over the objects in the array and print out their names.
 //: 1. Create a protocol extension for `NamedThing` that contains a new computed property of type `String` called `initial`. Add a default implementation in your protocol extension, which returns the first character of the `name` property, or, if `name` is empty, an empty string.
 //: 1. Print the new `initials` property in the loop you created above.
+// 11.1
+// https://docs.swift.org/swift-book/documentation/the-swift-programming-language/protocols/
+protocol NamedThing {
+    var name: String {get}
+}
+
+// 11.2
+extension Person: NamedThing{}
+extension Pet: NamedThing{}
+
+// 11.3
+var namedThings: [NamedThing] = [bello, mimi, bruno, michael, armin, ebu]
+
+// 11.5
+extension NamedThing {
+    var initial: String {
+        if let firstChar = name.first {
+            return String(firstChar)
+        } else {
+            return ""
+        }
+    }
+}
+
+// 11.4 + 11.6
+for thing in namedThings {
+    print("\(thing.name) has initial: \(thing.initial)")
+}
